@@ -2,6 +2,15 @@
   "name": "the-crypt-chat",
   "version": "1.0.0",
   "description": "",
+  "author": { 
+    "name" : "Nick Mertens", 
+    "email" : "nick@thecrypt.co.nz", 
+    "url" : "http://thecrypt.co.nz/"
+  },
+  "repository" : { 
+    "type" : "git", 
+    "url" : "https://github.com/Cryptacular/the-crypt-chat.git"
+  },
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
