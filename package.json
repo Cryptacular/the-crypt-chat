@@ -1,0 +1,17 @@
+{
+  "name": "the-crypt-chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.4.4",
+    "lodash": "^4.17.2",
+    "restify": "^4.3.0"
+  }
+}
