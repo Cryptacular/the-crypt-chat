@@ -27,34 +27,59 @@ bot.dialog('/', dialog);
 // Add intent handlers
 dialog.matches('Help', [
     function (session, args) {
-        session.send('You need some help, huh?');
+        session.send('Not sure what to do? I am merely a chat bot, so I have limited responses! You can ask for details about me, ask about blog posts, anything at all really!');
     }
 ]);
 
 dialog.matches('Greeting', [
-    function (session, args) {
-        session.send('Hey hey!');
+    function(session, args) {
+        session.beginDialog('/profile');
+    }
+]);
+
+dialog.matches('GetName', [
+    function(session, args) {
+        session.beginDialog('/name');
+    }
+]);
+
+dialog.matches('ChangeName', [
+    function(session, args) {
+        session.beginDialog('/changename');
+    }
+]);
+
+bot.dialog('/profile', [
+    function (session) {
+        if (!session.userData.name) {
+            builder.Prompts.text(session, 'Hi, I\'m Nick! What\'s your name?');
+        } else {
+            session.send('Welcome back, %s!', session.userData.name);
+            session.endDialog();
+        }
+    },
+    function (session, results) {
+        session.userData.name = results.response;
+        session.send('Awesome, nice to meet you %s!', session.userData.name);
         session.endDialog();
     }
 ]);
 
-dialog.matches('GetDetails', [
-    function(session, args) {
-        let entities = [];
-        for (let i = 0; i < args.entities.length; i++) {
-            entities.push(args.entities[i].entity)
-        }
-
-        if (_.forIn(['who'], entities)) {
-            if (session.userData.nameKnown) {
-                session.send('Haven\'t you asked me this already? Anyway, I\'m Nick, nice to meet you! Again...');
-            } else {
-                session.send('I\'m Nick, nice to meet you!');
-                session.userData.nameKnown = true;
-            }
-            session.endDialog();
-        }
+bot.dialog('/changename', [
+    function (session) {
+        builder.Prompts.text(session, 'No problem, what\'s your name?');
+    },
+    function (session, results) {
+        session.userData.name = results.response;
+        session.send('Awesome, nice to meet you %s!', session.userData.name);
+        session.endDialog();
     }
 ]);
 
-dialog.onDefault(builder.DialogAction.send("Sorry, what? I'm a bot and only represent a fraction of my master's intelligence and incredible wit. I've also been trained to love my master, so forgive me."));
+bot.dialog('/name', [
+    function (session) {
+        session.send('My master\'s name is %s, and I am his %s Bot! We bear a striking resemblance...', "Nick", "Nick");
+    }
+]);
+
+dialog.onDefault(builder.DialogAction.send("Sorry, what? I'm a bot and only represent a fraction of my master's intelligence and incredible wit. I've also been trained to love my master, so forgive me 😉"));
