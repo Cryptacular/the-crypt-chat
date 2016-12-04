@@ -78,7 +78,8 @@ bot.dialog('/changename', [
 
 bot.dialog('/name', [
     function (session) {
-        session.send('My master\'s name is %s, and I am his %s Bot! We bear a striking resemblance...', "Nick", "Nick");
+        session.send('My master\'s name is Nick, and I am his Nick Bot! We bear a striking resemblance...');
+        session.endDialog();
     }
 ]);
 
