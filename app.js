@@ -54,7 +54,7 @@ bot.dialog('/profile', [
         if (!session.userData.name) {
             builder.Prompts.text(session, 'Hi, I\'m Nick! What\'s your name?');
         } else {
-            session.send('Welcome back, %s!', session.userData.name);
+            session.send('Hello to you again, %s!', session.userData.name);
             session.endDialog();
         }
     },
