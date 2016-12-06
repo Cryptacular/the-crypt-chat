@@ -1,8 +1,32 @@
 "use strict";
 
+// Dependencies
 var _ = require('lodash');
 var builder = require('botbuilder');
 var restify = require('restify');
+
+// Global variables
+let accounts = {
+    'twitter': {
+        'name': 'Twitter',
+        'username': 'Cryptacular',
+        'url': 'https://twitter.com/Cryptacular'
+    },
+    'linkedin': {
+        'name': 'LinkedIn',
+        'url': 'https://nz.linkedin.com/in/nick-mertens-66799830'
+    },
+    'instagram': {
+        'name': 'Instagram',
+        'username': 'creationsfromthecrypt',
+        'url': 'https://www.instagram.com/creationsfromthecrypt/'
+    },
+    'medium': {
+        'name': 'Medium',
+        'username': 'Cryptacular',
+        'url': 'https://medium.com/@Cryptacular'
+    }
+};
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -49,6 +73,15 @@ dialog.matches('ChangeName', [
     }
 ]);
 
+dialog.matches('GetSocialMedia', [
+    function(session, args) {
+        if (args.entities.length > 0) {
+            session.conversationData.socialMediaAccount = args.entities[0].entity;
+        }
+        session.beginDialog('/socialmedia');
+    }
+]);
+
 bot.dialog('/profile', [
     function (session) {
         if (!session.userData.name) {
@@ -83,4 +116,39 @@ bot.dialog('/name', [
     }
 ]);
 
+bot.dialog('/socialmedia', [
+    function (session) {
+        let account = session.conversationData.socialMediaAccount;
+
+        if (account && isSocialMediaAccountAvailable(account)) {
+            displaySocialMediaAccount(session);
+            session.endDialog();
+        } else {
+            builder.Prompts.choice(session, "Which account of mine are you after?", accounts)
+        }
+    },
+    function (session, results) {
+        session.conversationData.socialMediaAccount = results.response.entity;
+        displaySocialMediaAccount(session);
+        session.endDialog();
+    }
+]);
+
 dialog.onDefault(builder.DialogAction.send("Sorry, what? I'm a bot and only represent a fraction of my master's intelligence and incredible wit. I've also been trained to love my master, so forgive me 😉"));
+
+// Functions
+function isSocialMediaAccountAvailable(account) {
+    if (accounts[account]) {
+        return true;
+    }
+    return false;
+}
+
+function displaySocialMediaAccount(session) {
+    let account = accounts[session.conversationData.socialMediaAccount.toLowerCase()];
+    if (account.username) {
+        session.send("My %s account is called %s and you can find it here: %s", account.name, account.username, account.url);
+    } else {
+        session.send("You can find my %s account here: %s", account.name, account.url);
+    }
+}
