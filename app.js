@@ -73,6 +73,12 @@ dialog.matches('ChangeName', [
     }
 ]);
 
+dialog.matches('GetMood', [
+    function(session, args) {
+        session.beginDialog('/mood');
+    }
+]);
+
 dialog.matches('GetSocialMedia', [
     function(session, args) {
         if (args.entities.length > 0) {
@@ -116,6 +122,25 @@ bot.dialog('/name', [
     }
 ]);
 
+bot.dialog('/mood', [
+    function (session) {
+        session.send("I'm doing rather well, thanks for asking!");
+        session.send("Of course, I'm an application, running on a server god knows where, so take that with a grain of salt.");
+        builder.Prompts.text(session, "How are you?");
+    },
+    function(session, results) {
+        session.conversationData.mood = guessMood(results.response);
+        if (session.conversationData.mood > 0) {
+            session.send("My robotic sensors give me the impression you're well. That's good!");
+        } else if (session.conversationData.mood < 0) {
+            session.send("From your response, I get the feeling you're not doing great. That sucks, I'm sorry!");
+        } else {
+            session.send("Good to know!");
+        }
+        session.endDialog();
+    }
+]);
+
 bot.dialog('/socialmedia', [
     function (session) {
         let account = session.conversationData.socialMediaAccount;
@@ -137,6 +162,42 @@ bot.dialog('/socialmedia', [
 dialog.onDefault(builder.DialogAction.send("Sorry, what? I'm a bot and only represent a fraction of my master's intelligence and incredible wit. I've also been trained to love my master, so forgive me 😉"));
 
 // Functions
+function guessMood(response) {
+    let moods = {
+        positive: [
+            "good",
+            "well",
+            "okay",
+            "not bad",
+            "great",
+            "awesome"
+        ],
+        negative: [
+            "bad",
+            "shit",
+            "terrible",
+            "awful",
+            "balls",
+            "crap",
+            "meh"
+        ]
+    }
+
+    for (let i = 0; i < moods.positive.length; i++) {
+        if (_.includes(response, moods.positive[i])) {
+            return 1;
+        }
+    }
+
+    for (let i = 0; i < moods.negative.length; i++) {
+        if (_.includes(response, moods.negative[i])) {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
 function isSocialMediaAccountAvailable(account) {
     if (accounts[account]) {
         return true;
