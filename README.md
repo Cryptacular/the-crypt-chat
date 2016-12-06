@@ -8,7 +8,7 @@ This bot is to be hosted on my [personal website](thecrypt.co.nz) and will allow
 
 * [ ] Add all intents
 * [ ] Flesh out all conversation paths
-* [ ] Deploy to Heroku or Azure
+* [x] Deploy to Heroku or Azure
 * [ ] Store response data in database, or use another API
 
 ## Third Party Libraries
@@ -17,3 +17,4 @@ Thanks to the creators of the following libraries and products:
 
 * [Microsoft Bot Framework](https://dev.botframework.com/)
 * [LUIS (Language Understanding Intelligent Service)](https://www.luis.ai/)
+* [LoDash](https://github.com/lodash/lodash)
